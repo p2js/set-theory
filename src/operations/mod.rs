@@ -54,6 +54,11 @@ impl<T, R> Set<(T, R)> for CartesianProduct<'_, T, R> {
         self.a.contains(&x.0) && self.b.contains(&x.1)
     }
 }
+impl<'a, T, R> CartesianProduct<'a, T, R> {
+    pub fn of(a: &'a dyn Set<T>, b: &'a dyn Set<R>) -> Self {
+        Self { a, b }
+    }
+}
 
 pub struct PowerSet<'a, T> {
     a: &'a dyn Set<T>,
@@ -61,5 +66,10 @@ pub struct PowerSet<'a, T> {
 impl<T> Set<FiniteSet<T>> for PowerSet<'_, T> {
     fn contains(&self, set: &FiniteSet<T>) -> bool {
         set.iter().all(|value| self.a.contains(value))
+    }
+}
+impl<'a, T> PowerSet<'a, T> {
+    pub fn of(a: &'a dyn Set<T>) -> Self {
+        Self { a }
     }
 }
