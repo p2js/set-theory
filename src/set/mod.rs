@@ -1,16 +1,13 @@
 use std::collections::HashSet;
 use std::hash::Hash;
 
-pub trait SetElement: Copy + PartialEq {}
-impl<T> SetElement for T where T: Copy + PartialEq {}
-
-pub trait Set<T: SetElement> {
-    fn contains(&self, x: T) -> bool;
+pub trait Set<T> {
+    fn contains(&self, x: &T) -> bool;
 }
 
 pub struct EmptySet {}
-impl<T: SetElement> Set<T> for EmptySet {
-    fn contains(&self, _x: T) -> bool {
+impl<T> Set<T> for EmptySet {
+    fn contains(&self, _x: &T) -> bool {
         false
     }
 }
@@ -25,32 +22,37 @@ impl Default for EmptySet {
     }
 }
 
-pub struct FiniteSet<T: SetElement> {
+pub struct FiniteSet<T> {
     values: HashSet<T>,
 }
-impl<T: SetElement> Set<T> for FiniteSet<T> {
-    fn contains(&self, x: T) -> bool {
-        self.values.iter().any(|v| *v == x)
+impl<T: PartialEq> Set<T> for FiniteSet<T> {
+    fn contains(&self, x: &T) -> bool {
+        self.values.iter().any(|v| *v == *x)
     }
 }
-impl<T: SetElement + Eq + Hash> FiniteSet<T> {
+impl<T: Copy + Eq + Hash> FiniteSet<T> {
     pub fn new(vals: &[T]) -> Self {
         Self {
             values: vals.iter().copied().collect(),
         }
     }
 }
-
-pub struct InfiniteSet<'a, T: SetElement> {
-    predicates: &'a [fn(T) -> bool],
+impl<T> FiniteSet<T> {
+    pub fn iter(&self) -> impl Iterator<Item = &T> + '_ {
+        self.values.iter()
+    }
 }
-impl<T: SetElement> Set<T> for InfiniteSet<'_, T> {
-    fn contains(&self, x: T) -> bool {
+
+pub struct PredicateSet<'a, T> {
+    predicates: &'a [fn(&T) -> bool],
+}
+impl<T> Set<T> for PredicateSet<'_, T> {
+    fn contains(&self, x: &T) -> bool {
         self.predicates.iter().all(|p| p(x))
     }
 }
-impl<'a, T: SetElement> InfiniteSet<'a, T> {
-    pub fn new(predicates: &'a [fn(T) -> bool]) -> Self {
+impl<'a, T> PredicateSet<'a, T> {
+    pub fn new(predicates: &'a [fn(&T) -> bool]) -> Self {
         Self { predicates }
     }
 
