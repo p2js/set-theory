@@ -52,7 +52,7 @@ All of these types use dynamic trait object references to allow for operations o
 use set_theory::operations::{Union, PowerSet};
 use set_theory::sets::{FiniteSet, PredicateSet};
 
-let a = FiniteSet::new(&[5]);
+let a = FiniteSet::new(&[1, 5]);
 let b = PredicateSet::new(&[|&x| x > 5, |&x| x % 2 == 0]);
 
 let aub = Union::of(&a, &b);
