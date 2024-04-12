@@ -1,2 +1,2 @@
 pub mod operations;
-pub mod set;
+pub mod sets;

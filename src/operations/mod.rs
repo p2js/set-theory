@@ -1,4 +1,4 @@
-use crate::set::{FiniteSet, Set};
+use crate::sets::{FiniteSet, Set};
 
 pub struct Union<'a, T> {
     a: &'a dyn Set<T>,
