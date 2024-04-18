@@ -66,4 +66,4 @@ assert!(pa.contains(&FiniteSet::new(&[1])));
 
 ## Interacting with sets
 
-All set types in the library implement a common `Set<T>` trait. The trait only requires implementation of a function to check whether a value is in the set. This is because infinite sets do not store any values, so any method to access some list of values would be extremely difficult (to impossible).
+All set types in the library implement a common `Set<T>` trait. The trait only requires implementation of a [function to check whether a value is in the set](https://en.wikipedia.org/wiki/Indicator_function). This is because infinite sets do not store any values, so any method to access some list of values would be extremely difficult (to impossible) due to finite-memory and [The Halting-Problem](https://en.wikipedia.org/wiki/Halting_problem).
