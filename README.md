@@ -26,8 +26,8 @@ use set_theory::sets::FiniteSet;
 
 let fs = FiniteSet::new(&[1, 2, 3]);
 
-assert!(fs.contains(1));
-assert!(!fs.contains(4));
+assert!(fs.contains(&1));
+assert!(!fs.contains(&4));
 ```
 
 The `PredicateSet<T>` is meant to represent an infinite set as a list of predicates (functions that take in a single `T` argument and return a boolean), in a sort of emulation of set builder notation. A value will count as being in the set if all the predicates evaluate to true.
@@ -64,6 +64,22 @@ assert!(pa.contains(&a));
 assert!(pa.contains(&FiniteSet::new(&[1])));
 ```
 
+## Relations
+
+Relations can be used to encode relationships between elements in a set through a predicate.
+
+```rs
+use set_theory::sets::PredicateSet;
+use set_theory::relations::Relation;
+
+let c = PredicateSet::<i32>::all();
+// <= relation
+let is_less_than = Relation::on(&c, |a, b| b - a > 0);
+
+assert!(is_less_than.relates(&2, &4));
+assert!(!is_less_than.relates(&2, &1));
+```
+
 ## Interacting with sets
 
-All set types in the library implement a common `Set<T>` trait. The trait only requires implementation of a [function to check whether a value is in the set](https://en.wikipedia.org/wiki/Indicator_function). This is because infinite sets do not store any values, so any method to access some list of values would be extremely difficult (to impossible) due to finite-memory and [The Halting-Problem](https://en.wikipedia.org/wiki/Halting_problem).
+All set types in the library implement a common `Set<T>` trait. The trait only requires implementation of a [function to check whether a value is in the set](https://en.wikipedia.org/wiki/Indicator_function). This is because infinite sets do not store any values, so any method to access some list of values would be extremely difficult to impossible.

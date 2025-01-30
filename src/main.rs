@@ -1,4 +1,5 @@
 use set_theory::operations::*;
+use set_theory::relations::Relation;
 use set_theory::sets::*;
 
 fn main() {
@@ -21,4 +22,11 @@ fn main() {
     let pa = PowerSet::of(&a);
     assert!(pa.contains(&a));
     assert!(pa.contains(&FiniteSet::new(&[1])));
+
+    let c = PredicateSet::<i32>::all();
+
+    let equivalence_relation = Relation::on(&c, |a, b| a % 2 == b % 2);
+
+    assert!(equivalence_relation.relates(&2, &4));
+    assert!(!equivalence_relation.relates(&2, &3));
 }
